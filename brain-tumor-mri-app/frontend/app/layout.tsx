@@ -45,7 +45,7 @@ export default function RootLayout({
         {/* Persistent, always-visible medical disclaimer */}
         <DisclaimerBanner />
         <Navbar />
-        <main className="mx-auto w-full max-w-7xl px-5 pb-24 pt-8 sm:px-8">
+        <main className="mx-auto w-full max-w-[1600px] px-5 pb-24 pt-8 sm:px-8 lg:px-10 2xl:px-12">
           {children}
         </main>
         <SiteFooter />

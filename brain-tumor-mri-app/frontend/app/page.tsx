@@ -10,7 +10,13 @@ import { ProbabilityChart } from "@/components/ProbabilityChart";
 import { GradCamView } from "@/components/GradCamView";
 import { AnalyzingState, EmptyResults, ErrorState } from "@/components/States";
 import { InvalidImageState } from "@/components/InvalidImageState";
-import { BrainIcon, SparkIcon } from "@/components/Icons";
+import {
+  BrainIcon,
+  SparkIcon,
+  LayersIcon,
+  HeatIcon,
+  CheckIcon,
+} from "@/components/Icons";
 import { predict, fetchSampleAsFile, backendUrl } from "@/lib/api";
 import type {
   ModelKey,
@@ -18,6 +24,14 @@ import type {
   SampleImage,
   ValidationInfo,
 } from "@/lib/types";
+
+// "At a glance" stats shown beside the hero headline on large screens.
+const HERO_STATS = [
+  { icon: LayersIcon, value: "2", label: "Deep-learning models" },
+  { icon: BrainIcon, value: "4", label: "Tumor classes" },
+  { icon: HeatIcon, value: "Grad-CAM", label: "Visual explainability" },
+  { icon: CheckIcon, value: "Guardrail", label: "Non-MRI input check" },
+];
 
 export default function DashboardPage() {
   const [model, setModel] = useState<ModelKey>("custom_cnn");
@@ -94,35 +108,59 @@ export default function DashboardPage() {
           aria-hidden
           className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-teal/20 blur-3xl"
         />
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="relative max-w-2xl"
-        >
-          <span className="inline-flex items-center gap-2 rounded-full border border-cyan/30 bg-cyan/10 px-3 py-1 text-xs font-semibold text-cyan">
-            <SparkIcon className="h-3.5 w-3.5" />
-            Two real deep-learning models · Grad-CAM explainability
-          </span>
-          <h1 className="mt-5 font-heading text-h1 font-bold tracking-tight sm:text-display">
-            Brain Tumor MRI
-            <span className="bg-gradient-to-r from-teal to-cyan bg-clip-text text-transparent">
-              {" "}
-              Classification
+        <div className="relative grid items-center gap-8 lg:grid-cols-[1.4fr_1fr]">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="inline-flex items-center gap-2 rounded-full border border-cyan/30 bg-cyan/10 px-3 py-1 text-xs font-semibold text-cyan">
+              <SparkIcon className="h-3.5 w-3.5" />
+              Two real deep-learning models · Grad-CAM explainability
             </span>
-          </h1>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-secondary">
-            Upload a brain MRI scan and classify it across four categories —
-            glioma, meningioma, no-tumor and pituitary — with live model
-            inference and visual explanations.
-          </p>
-        </motion.div>
+            <h1 className="mt-5 font-heading text-h1 font-bold tracking-tight xl:text-display">
+              Brain Tumor MRI
+              <span className="bg-gradient-to-r from-teal to-cyan bg-clip-text text-transparent">
+                {" "}
+                Classification
+              </span>
+            </h1>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-secondary">
+              Upload a brain MRI scan and classify it across four categories —
+              glioma, meningioma, no-tumor and pituitary — with live model
+              inference and visual explanations.
+            </p>
+          </motion.div>
+
+          {/* At-a-glance panel (fills hero width on large screens) */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="hidden gap-3 lg:grid lg:grid-cols-2"
+          >
+            {HERO_STATS.map(({ icon: Icon, value, label }) => (
+              <div
+                key={label}
+                className="glass-2 flex flex-col gap-2 p-4"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-surface/60 text-cyan">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <p className="font-heading text-lg font-bold leading-none text-ink-primary">
+                  {value}
+                </p>
+                <p className="text-xs leading-snug text-ink-tertiary">{label}</p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
       </section>
 
-      {/* Workspace */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-        {/* Left: controls */}
-        <div className="space-y-6 lg:col-span-2">
+      {/* Workspace: Input rail · Result · Insights rail */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* Left rail · Input */}
+        <div className="space-y-6 lg:col-span-4 xl:col-span-3">
           <section className="glass p-6">
             <div className="mb-4 flex items-center gap-2.5">
               <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/60 bg-surface/60 text-cyan">
@@ -161,8 +199,8 @@ export default function DashboardPage() {
           <SampleGallery onSelect={handleSample} disabled={loading} />
         </div>
 
-        {/* Right: results */}
-        <div className="space-y-6 lg:col-span-3">
+        {/* Center · Result */}
+        <div className="space-y-6 lg:col-span-8 xl:col-span-6">
           <AnimatePresence mode="wait">
             {loading ? (
               <motion.div key="loading" exit={{ opacity: 0 }}>
@@ -195,6 +233,25 @@ export default function DashboardPage() {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Right rail · Insights (large screens only; content added in later phases) */}
+        <aside className="hidden xl:col-span-3 xl:block">
+          <div className="glass flex h-full flex-col gap-3 p-6">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/60 bg-surface/60 text-cyan">
+                <SparkIcon className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="eyebrow mb-0.5">Insights</p>
+                <h4 className="font-heading text-lg font-semibold">At a glance</h4>
+              </div>
+            </div>
+            <p className="text-sm leading-relaxed text-ink-tertiary">
+              Confidence interpretation and your session history will appear here
+              after you analyze a scan.
+            </p>
+          </div>
+        </aside>
       </div>
     </div>
   );

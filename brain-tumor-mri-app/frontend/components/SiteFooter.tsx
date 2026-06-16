@@ -4,7 +4,7 @@ import { BrainIcon } from "./Icons";
 export function SiteFooter() {
   return (
     <footer className="border-t border-border/50 bg-base/60">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+      <div className="mx-auto flex max-w-[1600px] flex-col gap-4 px-5 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10 2xl:px-12">
         <div className="flex items-center gap-2.5">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-teal to-cyan text-base">
             <BrainIcon className="h-4 w-4" />

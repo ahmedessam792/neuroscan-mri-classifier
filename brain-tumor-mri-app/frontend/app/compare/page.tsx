@@ -64,8 +64,8 @@ export default function ComparePage() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <section className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      {/* Header + uploader band (uses full width on large screens) */}
+      <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr] lg:items-end">
         <div className="max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-cyan/30 bg-cyan/10 px-3 py-1 text-xs font-semibold text-cyan">
             <LayersIcon className="h-3.5 w-3.5" />
@@ -80,16 +80,15 @@ export default function ComparePage() {
             focus their attention.
           </p>
         </div>
-      </section>
 
-      {/* Uploader */}
-      <div className="mx-auto max-w-xl">
-        <ImageUploader
-          onSelect={handleSelect}
-          onClear={handleClear}
-          previewUrl={previewUrl}
-          disabled={loading}
-        />
+        <div className="w-full">
+          <ImageUploader
+            onSelect={handleSelect}
+            onClear={handleClear}
+            previewUrl={previewUrl}
+            disabled={loading}
+          />
+        </div>
       </div>
 
       {/* Results */}

@@ -11,7 +11,7 @@ export function DisclaimerBanner() {
       role="note"
       className="sticky top-0 z-50 border-b border-warning/25 bg-warning/10 backdrop-blur-md"
     >
-      <div className="mx-auto flex max-w-7xl items-center gap-2.5 px-5 py-2 sm:px-8">
+      <div className="mx-auto flex max-w-[1600px] items-center gap-2.5 px-5 py-2 sm:px-8 lg:px-10 2xl:px-12">
         <AlertIcon className="h-4 w-4 shrink-0 text-warning" aria-hidden />
         <p className="text-[13px] leading-snug text-ink-secondary">
           <span className="font-semibold text-warning">
