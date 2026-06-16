@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----------------------------------------------------------------------- */
+/* Design tokens                                                            */
+/* Colors are stored as space-separated RGB channels so Tailwind's          */
+/* <alpha-value> mechanism works (rgb(var(--c-teal) / 0.4)).                */
+/* ----------------------------------------------------------------------- */
+:root {
+  /* Typography tokens -- swap the font families here (and the <link> in
+     app/layout.tsx) to retheme the type system without touching components. */
+  --font-heading: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Surfaces -- deep navy to slate */
+  --c-base: 9 13 26;          /* #090D1A page background          */
+  --c-surface: 17 23 38;      /* #111726 glass card base          */
+  --c-surface-2: 25 33 53;    /* #192135 raised surface           */
+  --c-border: 51 65 92;       /* #33415C subtle borders           */
+
+  /* Text levels */
+  --c-ink-primary: 241 245 249;   /* slate-100 */
+  --c-ink-secondary: 156 170 191; /* muted slate */
+  --c-ink-tertiary: 107 122 145;  /* faint slate */
+
+  /* Clinical accents */
+  --c-teal: 8 145 178;   /* #0891B2 */
+  --c-cyan: 34 211 238;  /* #22D3EE */
+  --c-blue: 59 130 246;  /* #3B82F6 */
+
+  /* Semantic */
+  --c-success: 34 197 94;  /* #22C55E */
+  --c-warning: 245 158 11; /* #F59E0B */
+  --c-danger: 244 63 94;   /* #F43F5E */
+
+  /* Per-class colors */
+  --c-class-pituitary: 56 189 248;  /* sky   */
+  --c-class-notumor: 34 197 94;     /* green */
+  --c-class-meningioma: 251 191 36; /* amber */
+  --c-class-glioma: 251 113 133;    /* rose  */
+}
+
+/* ----------------------------------------------------------------------- */
+/* Base                                                                     */
+/* ----------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-base text-ink-primary font-body antialiased;
+    /* Ambient radial glows for depth (calm, not neon). */
+    background-image:
+      radial-gradient(60rem 40rem at 80% -10%, rgb(var(--c-teal) / 0.12), transparent 60%),
+      radial-gradient(50rem 40rem at -10% 10%, rgb(var(--c-blue) / 0.1), transparent 55%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5 {
+    @apply font-heading;
+  }
+
+  /* Visible focus rings for keyboard navigation (WCAG). */
+  :focus-visible {
+    @apply outline-none ring-2 ring-cyan/70 ring-offset-2 ring-offset-base;
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* Reusable component classes                                               */
+/* ----------------------------------------------------------------------- */
+@layer components {
+  /* Glassmorphism card */
+  .glass {
+    @apply rounded-2xl border border-border/60 bg-surface/60 shadow-glass backdrop-blur-xl;
+  }
+
+  .glass-2 {
+    @apply rounded-2xl border border-border/50 bg-surface-2/50 shadow-glass backdrop-blur-md;
+  }
+
+  /* Section eyebrow label */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-cyan;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl
+           bg-gradient-to-r from-teal to-cyan px-5 py-3 text-sm font-semibold
+           text-base shadow-glow-teal transition-all duration-200
+           hover:shadow-glow-cyan hover:brightness-110
+           disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none;
+  }
+
+  /* Secondary / ghost button */
+  .btn-ghost {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl
+           border border-border/70 bg-surface-2/40 px-5 py-3 text-sm font-semibold
+           text-ink-secondary transition-colors duration-200
+           hover:border-cyan/50 hover:text-ink-primary;
+  }
+}
+
+/* ----------------------------------------------------------------------- */
+/* Accessibility: honor reduced motion                                      */
+/* ----------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

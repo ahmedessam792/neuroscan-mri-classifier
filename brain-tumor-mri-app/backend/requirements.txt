@@ -1,0 +1,16 @@
+# Brain Tumor MRI Classification -- backend dependencies
+#
+# The trained models were saved with Keras 3.13.2. TensorFlow 2.18+ ships
+# Keras 3; we additionally pin keras==3.13.2 (Keras 3 is decoupled from TF and
+# can be upgraded independently) so the saved .keras files load cleanly.
+
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+tensorflow-cpu==2.18.0
+keras==3.13.2
+
+numpy==1.26.4
+pillow==11.1.0
+opencv-python-headless==4.11.0.86

@@ -1,0 +1,42 @@
+# Brain Tumor MRI Classification -- full stack (backend + frontend)
+#
+#   docker compose up --build
+#
+# Backend serves both Keras models on :8000; frontend (Next.js) on :3000.
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: braintumor-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # Allow the frontend container + local browser to call the API.
+      CORS_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
+    volumes:
+      # Mount models + samples so they can be updated without rebuilding.
+      # (To surface About-page metrics, place model_comparison.csv in
+      #  ./backend before building -- it is copied into the image.)
+      - ./backend/models:/app/models:ro
+      - ./backend/sample_images:/app/sample_images:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Browser calls the backend on the host-published port.
+        NEXT_PUBLIC_API_URL: "http://localhost:8000"
+    container_name: braintumor-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
