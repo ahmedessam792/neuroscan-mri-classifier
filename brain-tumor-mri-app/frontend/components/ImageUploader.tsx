@@ -106,7 +106,7 @@ export function ImageUploader({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`group relative flex min-h-[260px] cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed p-8 text-center transition-all duration-200 ${
+            className={`group relative flex min-h-[220px] cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed p-6 text-center transition-all duration-200 sm:min-h-[260px] sm:p-8 ${
               dragOver
                 ? "border-cyan bg-cyan/10 shadow-glow-cyan"
                 : "border-border/70 bg-surface-2/30 hover:border-cyan/50 hover:bg-surface-2/50"

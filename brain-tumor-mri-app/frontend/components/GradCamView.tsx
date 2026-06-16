@@ -25,7 +25,7 @@ export function GradCamView({ originalImage, gradcamImage }: GradCamViewProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 min-[420px]:grid-cols-2">
         <figure className="space-y-2">
           <div className="overflow-hidden rounded-xl border border-border/60 bg-surface-2/40">
             {/* eslint-disable-next-line @next/next/no-img-element */}

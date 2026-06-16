@@ -55,7 +55,7 @@ export function ProbabilityChart({
         </div>
       </div>
 
-      <div className="h-[220px] w-full">
+      <div className="h-[200px] w-full sm:h-[230px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}

@@ -46,8 +46,9 @@ export function Navbar() {
               <li key={href}>
                 <Link
                   href={href}
+                  aria-label={label}
                   aria-current={active ? "page" : undefined}
-                  className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                  className={`flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-colors duration-200 sm:justify-start ${
                     active
                       ? "bg-cyan/15 text-cyan"
                       : "text-ink-secondary hover:bg-surface-2/60 hover:text-ink-primary"
