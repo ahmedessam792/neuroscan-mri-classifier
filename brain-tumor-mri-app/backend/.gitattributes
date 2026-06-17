@@ -1,0 +1,4 @@
+# Track trained Keras model weights with Git LFS in the Hugging Face Space repo.
+# Keeps the deployed backend repo lean and ensures the real weights (not text
+# pointers) are uploaded so the API can load the models.
+*.keras filter=lfs diff=lfs merge=lfs -text

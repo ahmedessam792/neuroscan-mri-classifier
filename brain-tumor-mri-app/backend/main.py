@@ -53,7 +53,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS -- allow the Next.js frontend. Override via CORS_ORIGINS (comma list).
+# CORS -- allow the Next.js frontend.
+#   * Exact origins come from CORS_ORIGINS (comma list) or the localhost
+#     defaults, so local dev / Docker Compose keep working unchanged.
+#   * allow_origin_regex additionally permits Vercel preview deployments
+#     (the random https://<branch>-<project>.vercel.app subdomains) without
+#     listing each one. Override the pattern via CORS_ORIGIN_REGEX if needed.
+# Note: we never use "*" -- explicit origins + a scoped regex are required for
+# allow_credentials=True to work in browsers.
 _origins_env = os.getenv("CORS_ORIGINS")
 origins = (
     [o.strip() for o in _origins_env.split(",") if o.strip()]
@@ -63,6 +70,8 @@ origins = (
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=os.getenv("CORS_ORIGIN_REGEX")
+    or r"https://([a-z0-9-]+\.)*vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
