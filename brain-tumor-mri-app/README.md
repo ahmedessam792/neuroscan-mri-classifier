@@ -146,8 +146,59 @@ Open http://localhost:3000.
   pick it up automatically.
 - **New page:** add a route under `frontend/app/` — it inherits the shared layout,
   disclaimer banner and route transitions.
-- **Swap fonts:** change the two `next/font` imports in `frontend/app/layout.tsx`;
-  components reference `--font-heading` / `--font-body`, so nothing else changes.
+- **Swap fonts:** change the Google Fonts `<link>` in `frontend/app/layout.tsx`
+  and the `--font-heading` / `--font-body` variables in `app/globals.css`;
+  components reference those variables, so nothing else changes.
+
+---
+
+## Deploying online
+
+The backend (FastAPI) and frontend (Next.js) deploy as **two separate
+services**. The frontend talks to the backend only through `lib/api.ts`, so the
+single thing to wire up is the API URL.
+
+### Environment variables
+
+| Service  | Variable              | Notes                                                                 |
+| -------- | --------------------- | --------------------------------------------------------------------- |
+| frontend | `NEXT_PUBLIC_API_URL` | Public backend URL. **Baked in at build time** — set it before/at build (Docker `--build-arg`, or the host's build env). No hardcoded URLs exist elsewhere. |
+| backend  | `CORS_ORIGINS`        | Comma-separated list of allowed frontend origins (e.g. `https://yourapp.com`). Defaults to localhost. |
+
+A local `.env.local` (frontend) is git-ignored; don't commit real environment
+values.
+
+### Production build
+
+`docker compose up --build` already produces a production frontend (Next.js
+`standalone`) and a CPU TensorFlow backend. For split hosting, build each image
+separately and set the env vars above.
+
+### Security notes
+
+- **CORS** is restricted to `CORS_ORIGINS` — set it to your real origin(s) only.
+- **Uploads** are validated by content-type (`ALLOWED_CONTENT_TYPES`) and by the
+  non-MRI input guardrail. Recommended hardening before public traffic: add a
+  **max upload size** and basic **rate limiting** at the API or a proxy/CDN, and
+  serve everything over **HTTPS**.
+- The app is an **educational demo** — keep the disclaimer visible.
+
+### Large model files (important)
+
+The two `.keras` models total ~90 MB (and are currently committed, with
+duplicate copies at the repo root). Before pushing to GitHub:
+
+- Track models with **Git LFS** (`git lfs track "*.keras"`) — keeps the repo
+  lean. (`best_effnet_b3_finetuned.keras` is ~75 MB, under GitHub's 100 MB hard
+  limit, but LFS is still recommended.)
+- Remove the **duplicate** root-level model copies; keep only
+  `backend/models/`.
+
+### Next.js security update
+
+`next@15.1.6` has advisory **CVE-2025-66478**. Bumping to the latest patched
+15.x is recommended (`npm i next@latest` in `frontend/`, then rebuild). Not
+applied here by default.
 
 ---
 
