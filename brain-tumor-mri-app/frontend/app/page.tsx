@@ -10,6 +10,7 @@ import { ProbabilityChart } from "@/components/ProbabilityChart";
 import { GradCamView } from "@/components/GradCamView";
 import { AnalyzingState, EmptyResults, ErrorState } from "@/components/States";
 import { InvalidImageState } from "@/components/InvalidImageState";
+import { ConfidenceInsight } from "@/components/ConfidenceInsight";
 import {
   BrainIcon,
   SparkIcon,
@@ -232,25 +233,40 @@ export default function DashboardPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Insights inline on smaller screens (the rail is xl+ only) */}
+          {result && (
+            <div className="space-y-6 xl:hidden">
+              <ConfidenceInsight result={result} />
+            </div>
+          )}
         </div>
 
-        {/* Right rail · Insights (large screens only; content added in later phases) */}
+        {/* Right rail · Insights (xl+) */}
         <aside className="hidden xl:col-span-3 xl:block">
-          <div className="glass flex h-full flex-col gap-3 p-6">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/60 bg-surface/60 text-cyan">
-                <SparkIcon className="h-4 w-4" />
-              </span>
-              <div>
-                <p className="eyebrow mb-0.5">Insights</p>
-                <h4 className="font-heading text-lg font-semibold">At a glance</h4>
-              </div>
+          {result ? (
+            <div className="space-y-6">
+              <ConfidenceInsight result={result} />
             </div>
-            <p className="text-sm leading-relaxed text-ink-tertiary">
-              Confidence interpretation and your session history will appear here
-              after you analyze a scan.
-            </p>
-          </div>
+          ) : (
+            <div className="glass flex h-full flex-col gap-3 p-6">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-border/60 bg-surface/60 text-cyan">
+                  <SparkIcon className="h-4 w-4" />
+                </span>
+                <div>
+                  <p className="eyebrow mb-0.5">Insights</p>
+                  <h4 className="font-heading text-lg font-semibold">
+                    At a glance
+                  </h4>
+                </div>
+              </div>
+              <p className="text-sm leading-relaxed text-ink-tertiary">
+                Confidence interpretation and your session history will appear
+                here after you analyze a scan.
+              </p>
+            </div>
+          )}
         </aside>
       </div>
     </div>
