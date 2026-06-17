@@ -15,12 +15,12 @@ const OPTIONS: ModelOption[] = [
   {
     key: "custom_cnn",
     label: "Custom CNN",
-    subtitle: "Purpose-built network",
+    subtitle: "Custom baseline",
   },
   {
     key: "effnet_b3",
     label: "EfficientNetB3",
-    subtitle: "Fine-tuned transfer learning",
+    subtitle: "Transfer learning",
   },
 ];
 
@@ -49,7 +49,7 @@ export function ModelSelector({ value, onChange, disabled }: ModelSelectorProps)
             aria-checked={active}
             disabled={disabled}
             onClick={() => onChange(opt.key)}
-            className={`relative flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${
+            className={`relative flex min-w-0 cursor-pointer flex-col items-start gap-2 rounded-xl px-3 py-3 text-left transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${
               active ? "text-ink-primary" : "text-ink-secondary hover:text-ink-primary"
             }`}
           >
@@ -69,9 +69,12 @@ export function ModelSelector({ value, onChange, disabled }: ModelSelectorProps)
             >
               <Icon className="h-5 w-5" />
             </span>
-            <span className="relative z-10 flex flex-col leading-tight">
-              <span className="text-sm font-semibold">{opt.label}</span>
-              <span className="text-xs text-ink-tertiary">{opt.subtitle}</span>
+            {/* Full-width text block so the model name never gets clipped */}
+            <span className="relative z-10 flex w-full min-w-0 flex-col leading-tight">
+              <span className="truncate text-sm font-semibold">{opt.label}</span>
+              <span className="truncate text-xs text-ink-tertiary">
+                {opt.subtitle}
+              </span>
             </span>
           </button>
         );
