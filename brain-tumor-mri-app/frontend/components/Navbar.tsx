@@ -18,7 +18,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-[42px] z-40 px-4 pt-4 sm:px-6 lg:px-10 2xl:px-12">
+    <header className="sticky top-0 z-40 px-4 pt-4 sm:px-6 lg:px-10 2xl:px-12">
       <nav className="glass mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link
           href="/"
