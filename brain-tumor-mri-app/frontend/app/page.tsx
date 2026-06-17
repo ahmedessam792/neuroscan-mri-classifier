@@ -15,6 +15,7 @@ import {
   SessionHistory,
   type HistoryEntry,
 } from "@/components/SessionHistory";
+import { DownloadReportButton } from "@/components/DownloadReportButton";
 import {
   BrainIcon,
   SparkIcon,
@@ -250,6 +251,10 @@ export default function DashboardPage() {
               </motion.div>
             ) : result ? (
               <motion.div key="result" className="space-y-6">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="eyebrow">Analysis result</p>
+                  <DownloadReportButton result={result} />
+                </div>
                 <PredictionCard result={result} />
                 <ProbabilityChart
                   probabilities={result.probabilities}
