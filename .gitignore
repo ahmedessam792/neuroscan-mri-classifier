@@ -14,8 +14,14 @@
 **/.playwright-mcp/
 *.log
 
-# ---- Local editor / tool settings ----
-.claude/settings.local.json
+# ---- Local editor / tool settings (Claude Code local state) ----
+.claude/
+
+# ---- Internal design-reference docs (non-runtime, kept local) ----
+brain-tumor-mri-app/Skills/
+
+# ---- Duplicate of backend/model_comparison.csv (app reads the backend/ copy) ----
+brain-tumor-mri-app/backend/models/model_comparison.csv
 
 # ---- Environment overrides (keep .env examples, ignore real local envs) ----
 **/.env*.local
