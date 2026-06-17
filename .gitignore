@@ -1,0 +1,28 @@
+# ---- Dependencies & build output ----
+**/node_modules/
+**/.next/
+**/out/
+**/venv/
+**/__pycache__/
+*.pyc
+**/tsconfig.tsbuildinfo
+
+# ---- Dev caches / tool artifacts (machine-local) ----
+.npmcache/
+.tmp/
+.playwright-mcp/
+**/.playwright-mcp/
+*.log
+
+# ---- Local editor / tool settings ----
+.claude/settings.local.json
+
+# ---- Environment overrides (keep .env examples, ignore real local envs) ----
+**/.env*.local
+
+# ---- OS junk ----
+.DS_Store
+Thumbs.db
+
+# ---- Stray screenshots / scratch images at the repo root ----
+/*.png
