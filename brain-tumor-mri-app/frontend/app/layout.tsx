@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
-import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { SiteFooter } from "@/components/SiteFooter";
 
 /**
@@ -42,8 +41,6 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen">
-        {/* Persistent, always-visible medical disclaimer */}
-        <DisclaimerBanner />
         <Navbar />
         <main className="mx-auto w-full max-w-[1600px] px-5 pb-24 pt-8 sm:px-8 lg:px-10 2xl:px-12">
           {children}
