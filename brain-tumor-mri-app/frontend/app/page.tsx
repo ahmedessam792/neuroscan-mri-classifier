@@ -12,6 +12,10 @@ import { AnalyzingState, EmptyResults, ErrorState } from "@/components/States";
 import { InvalidImageState } from "@/components/InvalidImageState";
 import { ConfidenceInsight } from "@/components/ConfidenceInsight";
 import {
+  SessionHistory,
+  type HistoryEntry,
+} from "@/components/SessionHistory";
+import {
   BrainIcon,
   SparkIcon,
   LayersIcon,
@@ -42,6 +46,9 @@ export default function DashboardPage() {
   const [invalid, setInvalid] = useState<ValidationInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // In-session history of analyzed scans (memory only; clears on reload).
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   const runPrediction = useCallback(
     async (f: File, modelKey: ModelKey) => {
@@ -54,9 +61,26 @@ export default function DashboardPage() {
         const res = await predict(f, modelKey);
         if (res.valid) {
           setResult(res);
+          // Record in session history (keep the last 8, newest first).
+          const entry: HistoryEntry = {
+            id:
+              typeof crypto !== "undefined" && crypto.randomUUID
+                ? crypto.randomUUID()
+                : `${Date.now()}-${Math.random()}`,
+            timestamp: Date.now(),
+            thumbnail: res.original_image,
+            modelLabel: res.model_label,
+            topLabel: res.top_label,
+            topClass: res.top_class,
+            topConfidence: res.top_confidence,
+            result: res,
+          };
+          setHistory((prev) => [entry, ...prev].slice(0, 8));
+          setActiveId(entry.id);
         } else {
           // Non-MRI image rejected by the input guardrail -- no tumor results.
           setInvalid(res.validation);
+          setActiveId(null);
         }
       } catch (e) {
         setError(e instanceof Error ? e.message : "Prediction failed.");
@@ -66,6 +90,15 @@ export default function DashboardPage() {
     },
     [],
   );
+
+  // Restore a past analysis from history into the result view.
+  const handleHistorySelect = useCallback((entry: HistoryEntry) => {
+    setResult(entry.result);
+    setPreviewUrl(entry.thumbnail);
+    setInvalid(null);
+    setError(null);
+    setActiveId(entry.id);
+  }, []);
 
   const handleSelect = useCallback((f: File, url: string) => {
     setFile(f);
@@ -235,18 +268,28 @@ export default function DashboardPage() {
           </AnimatePresence>
 
           {/* Insights inline on smaller screens (the rail is xl+ only) */}
-          {result && (
+          {(result || history.length > 0) && (
             <div className="space-y-6 xl:hidden">
-              <ConfidenceInsight result={result} />
+              {result && <ConfidenceInsight result={result} />}
+              <SessionHistory
+                entries={history}
+                activeId={activeId}
+                onSelect={handleHistorySelect}
+              />
             </div>
           )}
         </div>
 
         {/* Right rail · Insights (xl+) */}
         <aside className="hidden xl:col-span-3 xl:block">
-          {result ? (
+          {result || history.length > 0 ? (
             <div className="space-y-6">
-              <ConfidenceInsight result={result} />
+              {result && <ConfidenceInsight result={result} />}
+              <SessionHistory
+                entries={history}
+                activeId={activeId}
+                onSelect={handleHistorySelect}
+              />
             </div>
           ) : (
             <div className="glass flex h-full flex-col gap-3 p-6">
